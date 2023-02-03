@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-// GetSignature returns the signature of a word
-func GetSignature(word string) string {
-	s := strings.Split(word, "")
+// SignatureOf returns the signature of a word
+func SignatureOf(word string) string {
+	s := strings.Split(strings.ToUpper(word), "")
 	sort.Strings(s)
 	sig := strings.Join(s, "")
 	return sig

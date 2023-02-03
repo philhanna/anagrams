@@ -17,7 +17,7 @@ func TestGetSignature(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := GetSignature(tt.args.word); got != tt.want {
+			if got := SignatureOf(tt.args.word); got != tt.want {
 				t.Errorf("GetSignature() = %v, want %v", got, tt.want)
 			}
 		})

@@ -3,7 +3,7 @@ package main
 import (
 	"anagrams"
 	"bufio"
-	"fmt"
+	"encoding/json"
 	"log"
 	"os"
 )
@@ -17,11 +17,12 @@ func main() {
 	var err error
 
 	type HashedWord struct {
-		Words []string `json:"words"`
+		Signature string   `json:"signature"`
+		Words     []string `json:"words"`
 	}
 
 	// Open the input file
-	if fp, err = os.Open("../somewords.txt"); err != nil {
+	if fp, err = os.Open("../words.txt"); err != nil {
 		log.Fatal(err)
 	}
 	defer fp.Close()
@@ -34,14 +35,22 @@ func main() {
 	scanner := bufio.NewScanner(fp)
 	for scanner.Scan() {
 		word := scanner.Text()
-		sig := anagrams.GetSignature(word)
+		sig := anagrams.SignatureOf(word)
+		list, ok := sigmap[sig]
+		if !ok {
+			// list = make([]string, 0)
+			sigmap[sig] = list
+		}
 		sigmap[sig] = append(sigmap[sig], word)
 	}
 
+	jsonbytes, err := json.Marshal(sigmap)
+
 	// Open the output file
-	if out, err = os.Create("words-sig.json"); err != nil {
+	if out, err = os.Create("words.json"); err != nil {
 		log.Fatal(err)
 	}
 	defer out.Close()
-
+	nBytes, err := out.Write(jsonbytes)
+	log.Printf("nBytes=%d, err=%v\n", nBytes, err)
 }
