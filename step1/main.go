@@ -1,13 +1,26 @@
-# anagrams
+package main
 
-## Source
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
-The problem is stated on page 150 the book *The Pragmatic Programmer, 20th Anniversary Edition* by David Thomas and Andrew Hunt.
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		scanner.Scan()
+		text := scanner.Text()
+		if len(text) == 0 {
+			break
+		} else {
+		for _, perm := range permutations(text) {
+			fmt.Println(perm)
+		}
+	}
+	}
+}
 
-## Algorithms
-
-To generate all permutations of a string:
-```
 // Recursive algorithm to find all permutations of a string.
 func permutations(s string) []string {
 	var newPerms []string
@@ -26,6 +39,3 @@ func permutations(s string) []string {
 	}
 	return newPerms
 }
-```
-## References
-- [jsonpp in Go](https://go.dev/play/p/1raEIAEr_Vt)
