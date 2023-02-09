@@ -9,12 +9,15 @@ import (
 	"github.com/philhanna/anagrams"
 )
 
+const (
+	WORDS = "words.txt"
+)
 /*
 This tool will create a copy of words.txt with signatures attached
 */
 func main() {
 
-	var fp, out *os.File
+	var fp *os.File
 	var err error
 
 	type HashedWord struct {
@@ -23,7 +26,7 @@ func main() {
 	}
 
 	// Open the input file
-	if fp, err = os.Open("../words.txt"); err != nil {
+	if fp, err = os.Open(WORDS); err != nil {
 		log.Fatal(err)
 	}
 	defer fp.Close()
@@ -47,11 +50,6 @@ func main() {
 
 	jsonbytes, err := json.Marshal(sigmap)
 
-	// Open the output file
-	if out, err = os.Create("../words.json"); err != nil {
-		log.Fatal(err)
-	}
-	defer out.Close()
-	nBytes, err := out.Write(jsonbytes)
+	nBytes, err := os.Stdout.Write(jsonbytes)
 	log.Printf("nBytes=%d, err=%v\n", nBytes, err)
 }

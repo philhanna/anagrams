@@ -44,7 +44,7 @@ func main() {
 }
 
 func loadDictionary(loaded chan error, pSigmap *map[string][]string) {
-	fp, err := os.Open("../words.json")
+	fp, err := os.Open("../sigmap.json")
 	if err != nil {
 		loaded <- err
 		return
