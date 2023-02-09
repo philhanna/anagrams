@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 
 	"github.com/philhanna/anagrams"
 )
@@ -19,9 +20,6 @@ func main() {
 	}
 	word := os.Args[1]
 
-	// Compute its signature
-	signature := anagrams.SignatureOf(word)
-
 	// Start loading the dictionary
 	loaded := make(chan error)
 	sigmap := make(map[string][]string)
@@ -34,15 +32,35 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Look up word in dictionary
-	list, ok := sigmap[signature]
-	if ok {
-		for _, aword := range list {
-			fmt.Println(aword)
+	// Examine all subsets of the word with length >= 3 and store them in a map
+	outset := make(map[string]int)
+	subsets := anagrams.AllSubsets(word)
+	for _, subset := range subsets {
+
+		// Compute the subset's signature
+		signature := anagrams.SignatureOf(subset)
+
+		// Look up all words with the same signature
+		list, ok := sigmap[signature]
+		if ok {
+			for _, newWord := range list {
+				outset[newWord] += 1
+			}
 		}
+	}
+
+	// Sort the output set and write it to stdout
+	keys := make([]string, 0, len(outset))
+	for key, _ := range outset {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		fmt.Printf("%s\n", key)
 	}
 }
 
+// Loads the signature map
 func loadDictionary(loaded chan error, pSigmap *map[string][]string) {
 	fp, err := os.Open("../sigmap.json")
 	if err != nil {
@@ -56,4 +74,23 @@ func loadDictionary(loaded chan error, pSigmap *map[string][]string) {
 	}
 	err = json.Unmarshal(jsonBytes, pSigmap)
 	loaded <- err
+}
+
+// Recursive algorithm to find all permutations of a string.
+func permutations(s string) []string {
+	var newPerms []string
+	var first, rest string
+
+	if len(s) == 1 {
+		newPerms = append(newPerms, s)
+	} else {
+		for i, ch := range s {
+			first = string(ch)
+			rest = s[0:i] + s[i+1:]
+			for _, perm := range permutations(rest) {
+				newPerms = append(newPerms, first+perm)
+			}
+		}
+	}
+	return newPerms
 }

@@ -1,5 +1,16 @@
 package main
 
+// This is a tool that will create a copy of words.txt with signatures
+// attached and write it to stdout.
+//
+// A word's signature in this case is just the sorted set of all its
+// characters appended together into a new string.  This signature will
+// be used as a key in a map of signatures to lists of words in the
+// dictionary that has that same signature.  For example:
+//  sigmap["CDDEEI"] == ["DECIDE", "DEICED"]
+//
+// The map will be serialized as JSON and written to stdout.
+
 import (
 	"bufio"
 	"encoding/json"
@@ -12,18 +23,10 @@ import (
 const (
 	WORDS = "words.txt"
 )
-/*
-This tool will create a copy of words.txt with signatures attached
-*/
 func main() {
 
 	var fp *os.File
 	var err error
-
-	type HashedWord struct {
-		Signature string   `json:"signature"`
-		Words     []string `json:"words"`
-	}
 
 	// Open the input file
 	if fp, err = os.Open(WORDS); err != nil {

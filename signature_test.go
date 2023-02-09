@@ -12,8 +12,8 @@ func TestGetSignature(t *testing.T) {
 		want string
 	}{
 		{"empty string", args{""}, ""},
-		{"already sorted", args{"abcdefg"}, "abcdefg"},
-		{"vinyl", args{"vinyl"}, "ilnvy"},
+		{"already sorted", args{"abcdefg"}, "ABCDEFG"},
+		{"vinyl", args{"vinyl"}, "ILNVY"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
