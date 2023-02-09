@@ -1,57 +1,59 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
-	"log"
+	"fmt"
+	"io"
 	"os"
 
 	"github.com/philhanna/anagrams"
 )
 
-/*
-This tool will create a copy of words.txt with signatures attached
-*/
+
 func main() {
 
-	var fp, out *os.File
-	var err error
-
-	type HashedWord struct {
-		Signature string   `json:"signature"`
-		Words     []string `json:"words"`
+	// Get the word from the command line
+	if len(os.Args) == 1 {
+		fmt.Fprintln(os.Stderr, "No word specified")
+		os.Exit(1)
 	}
+	word := os.Args[1]
 
-	// Open the input file
-	if fp, err = os.Open("../words.txt"); err != nil {
-		log.Fatal(err)
-	}
-	defer fp.Close()
+	// Compute its signature
+	signature := anagrams.SignatureOf(word)
 
-	// Create a map in which to save signatures mapped to the words
-	// that have them
+	// Start loading the dictionary
+	loaded := make(chan error)
 	sigmap := make(map[string][]string)
+	go loadDictionary(loaded, &sigmap)
 
-	// Read it line by line
-	scanner := bufio.NewScanner(fp)
-	for scanner.Scan() {
-		word := scanner.Text()
-		sig := anagrams.SignatureOf(word)
-		list, ok := sigmap[sig]
-		if !ok {
-			// list = make([]string, 0)
-			sigmap[sig] = list
+	// Wait for dictionary load to complete
+	err := <-loaded
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not load signature map: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Look up word in dictionary
+	list, ok := sigmap[signature]
+	if ok {
+		for _, aword := range list {
+			fmt.Println(aword)
 		}
-		sigmap[sig] = append(sigmap[sig], word)
 	}
+}
 
-	jsonbytes, err := json.Marshal(sigmap)
-
-	// Open the output file
-	if out, err = os.Create("../words.json"); err != nil {
-		log.Fatal(err)
+func loadDictionary(loaded chan error, pSigmap *map[string][]string) {
+	fp, err := os.Open("../words.json")
+	if err != nil {
+		loaded <- err
+		return
 	}
-	defer out.Close()
-	nBytes, err := out.Write(jsonbytes)
-	log.Printf("nBytes=%d, err=%v\n", nBytes, err)
+	jsonBytes, err := io.ReadAll(fp)
+	if err != nil {
+		loaded <- err
+		return
+	}
+	err = json.Unmarshal(jsonBytes, pSigmap)
+	loaded <- err
 }
