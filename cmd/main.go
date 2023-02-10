@@ -10,7 +10,10 @@ import (
 	"github.com/philhanna/anagrams"
 )
 
-
+// Takes a string from the command line and finds all words whose
+// letters are contained in the string. Only words of length
+// greater than or equal to 3 are included. Output is written
+// to stdout.
 func main() {
 
 	// Get the word from the command line
@@ -51,7 +54,7 @@ func main() {
 
 	// Sort the output set and write it to stdout
 	keys := make([]string, 0, len(outset))
-	for key, _ := range outset {
+	for key := range outset {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
@@ -74,23 +77,4 @@ func loadDictionary(loaded chan error, pSigmap *map[string][]string) {
 	}
 	err = json.Unmarshal(jsonBytes, pSigmap)
 	loaded <- err
-}
-
-// Recursive algorithm to find all permutations of a string.
-func permutations(s string) []string {
-	var newPerms []string
-	var first, rest string
-
-	if len(s) == 1 {
-		newPerms = append(newPerms, s)
-	} else {
-		for i, ch := range s {
-			first = string(ch)
-			rest = s[0:i] + s[i+1:]
-			for _, perm := range permutations(rest) {
-				newPerms = append(newPerms, first+perm)
-			}
-		}
-	}
-	return newPerms
 }

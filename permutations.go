@@ -1,6 +1,6 @@
 package anagrams
 
-// Recursive algorithm to find all Permutations of a string.
+// Recursive algorithm to find all permutations of a string.
 func Permutations(s string) []string {
 	var newPerms []string
 	var first, rest string
