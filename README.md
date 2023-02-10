@@ -7,6 +7,7 @@ Finds anagrams of all subsets of the specified word of sufficient length.
 options:
   -h, --help               display this help text and exit
   -n, --length=NUM         limits output to words of length >= NUM (default=3)
+  -f, --full               include only words the same length as the input
 ```
 
 ## Source

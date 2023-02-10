@@ -26,13 +26,17 @@ func main() {
 	// Start loading the dictionary
 	loaded := make(chan error)
 	sigmap := make(map[string][]string)
+
 	go loadDictionary(loaded, &sigmap)
 
 	// Meanwhile, handle the command line
-	word, length := parseArgs()
+	word, length, full := parseArgs()
 	if word == "" {
 		fmt.Fprintln(os.Stderr, "anagrams: No word specified")
 		os.Exit(1)
+	}
+	if full {
+		length = len(word)
 	}
 
 	// Wait for dictionary load to complete
@@ -83,13 +87,14 @@ func loadDictionary(loaded chan error, pSigmap *map[string][]string) {
 }
 
 // Defines and parses the command line arguments
-func parseArgs() (string, int){
+func parseArgs() (string, int, bool){
 	const usage = `usage: anagrams [OPTION]... [WORD]
 Finds anagrams of all subsets of the specified word of sufficient length.
 
 options:
   -h, --help               display this help text and exit
   -n, --length=NUM         limits output to words of length >= NUM (default=3)
+  -f, --full               include only words the same length as the input
 
 Source: <https://github.com/philhanna/anagrams>
 `
@@ -100,12 +105,15 @@ Source: <https://github.com/philhanna/anagrams>
 	}
 	const defaultLength = 3
 	var length int = defaultLength
+	var full bool = false
 	word := ""
 	flag.IntVar(&length, "n", 3, "limits output to only those words of length >= NUM (short)")
 	flag.IntVar(&length, "length", 3, "limits output to only those words of length >= NUM")
+	flag.BoolVar(&full, "f", false, "include only words the same length as the input")
+	flag.BoolVar(&full, "full", false, "include only words the same length as the input")
 	flag.Parse()
 	if flag.NArg() > 0 {
 		word = flag.Arg(0)
 	}
-	return word, length
+	return word, length, full
 }
