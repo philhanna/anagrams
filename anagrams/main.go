@@ -89,8 +89,7 @@ Finds anagrams of all subsets of the specified word of sufficient length.
 
 options:
   -h, --help               display this help text and exit
-  -n, --length=NUM         limits output to only those words
-                             of length >= NUM
+  -n, --length=NUM         limits output to words of length >= NUM (default=3)
 
 Source: <https://github.com/philhanna/anagrams>
 `
