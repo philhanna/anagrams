@@ -22,7 +22,7 @@ func TestAllSubsets(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			have := fmt.Sprintf("%v", AllSubsets(tt.args.s))
+			have := fmt.Sprintf("%v", AllSubsets(tt.args.s, 3))
 			want := tt.want
 			if have != want {
 				t.Errorf("have=%s,want=%s", have, want)
