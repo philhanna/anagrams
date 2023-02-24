@@ -1,6 +1,6 @@
 # anagrams
-[![Go Report Card](https:/goreportcard.com/badge/github.com/philhanna/anagrams)][idGoReportCard]
-[![PkgGoDev](https:/pkg.go.dev/badge/github.com/philhanna/anagrams)][idPkgGoDev]
+[![Go Report Card](https://goreportcard.com/badge/github.com/philhanna/anagrams)][idGoReportCard]
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/philhanna/anagrams)][idPkgGoDev]
 
 
 ```
@@ -29,5 +29,5 @@ go install github.com/philhanna/anagrams/anagrams@latest
 - [Github repository](https://github.com/philhanna/anagrams)
 - [jsonpp in Go](https://go.dev/play/p/1raEIAEr_Vt)
 
-[idGoReportCard]: https:/goreportcard.com/report/github.com/philhanna/anagrams
-[idPkgGoDev]: https:/pkg.go.dev/github.com/philhanna/anagrams
+[idGoReportCard]: https://goreportcard.com/report/github.com/philhanna/anagrams
+[idPkgGoDev]: https://pkg.go.dev/github.com/philhanna/anagrams
