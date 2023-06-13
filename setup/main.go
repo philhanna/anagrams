@@ -23,6 +23,7 @@ import (
 const (
 	WORDS = "words.txt"
 )
+
 func main() {
 
 	var fp *os.File
