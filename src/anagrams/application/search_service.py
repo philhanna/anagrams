@@ -71,4 +71,9 @@ class SearchService:
         for subset in subsets:
             sig = signature_of(subset)
             found.update(self._dictionary.lookup(sig))
+        if getattr(args, "word_lengths", False):
+            return sorted(
+                [f"{w} ({len(w)})" for w in found],
+                key=lambda s: (-len(s.split()[0]), s.split()[0]),
+            )
         return sorted(found)
