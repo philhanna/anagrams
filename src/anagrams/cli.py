@@ -56,6 +56,12 @@ def main() -> None:
         action="store_true",
         help="include only words the same length as the input",
     )
+    parser.add_argument(
+        "-w",
+        "--word-lengths",
+        action="store_true",
+        help="append word length in parentheses"
+    )
 
     args = parser.parse_args()
 
@@ -68,7 +74,7 @@ def main() -> None:
     try:
         dictionary = JsonDictionaryAdapter()
         service = SearchService(dictionary)
-        results = service.search(args.word, length)
+        results = service.search(args, length)
         for word in results:
             print(word)
     except Exception as exc:

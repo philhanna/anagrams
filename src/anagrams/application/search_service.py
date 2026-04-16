@@ -5,6 +5,8 @@ an optional minimum length, find every dictionary word that can be formed from
 some subset of the input word's letters.
 """
 
+from argparse import Namespace
+
 from anagrams.domain.signature import signature_of
 from anagrams.domain.subsets import all_subsets
 from anagrams.ports.dictionary_port import DictionaryPort
@@ -35,7 +37,7 @@ class SearchService:
         """
         self._dictionary = dictionary
 
-    def search(self, word: str, length: int = 3) -> list[str]:
+    def search(self, args: Namespace, length: int = 3) -> list[str]:
         """Find all dictionary words that are anagrams of any subset of *word*.
 
         The algorithm:
@@ -63,6 +65,7 @@ class SearchService:
             Lexicographically sorted list of unique matching words, all in
             the case returned by the dictionary (typically uppercase).
         """
+        word = args.word
         subsets = all_subsets(word.upper(), length)
         found: set[str] = set()
         for subset in subsets:
